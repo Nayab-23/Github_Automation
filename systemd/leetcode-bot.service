@@ -1,0 +1,13 @@
+[Unit]
+Description=LeetCode Auto Practice Bot
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/Users/nayab/Downloads/Hackathons/Github Automation
+ExecStart=/usr/bin/env python3 -m leetcode_bot.run
+User=%i
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
