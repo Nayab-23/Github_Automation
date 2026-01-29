@@ -14,7 +14,11 @@ def _slugify(text: str, max_len=50):
 def parse_questions() -> List[dict]:
     p = Path(LCB_QUESTIONS_PATH)
     if not p.exists():
-        return []
+        example = p.with_suffix(p.suffix + ".example")
+        if example.exists():
+            p = example
+        else:
+            return []
     raw = p.read_text()
     blocks = [b.strip() for b in re.split(r"^---$", raw, flags=re.MULTILINE) if b.strip()]
     problems = []

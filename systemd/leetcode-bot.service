@@ -4,9 +4,10 @@ After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=/Users/nayab/Downloads/Hackathons/Github Automation
-ExecStart=/usr/bin/env python3 -m leetcode_bot.run
-User=%i
+WorkingDirectory=%h/Github_Automation
+EnvironmentFile=-%h/Github_Automation/.env
+ExecStart=%h/Github_Automation/.venv/bin/python -m leetcode_bot.run
+User=nayab
 Restart=on-failure
 
 [Install]

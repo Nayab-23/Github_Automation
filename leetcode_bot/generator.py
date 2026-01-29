@@ -32,6 +32,7 @@ def generate_solution(problem: dict, model: str = None):
     solution = obj.get("solution_py")
     notes = obj.get("notes_md")
     metadata = obj.get("metadata") or {}
+    metadata.setdefault("model", model)
     metadata.setdefault("title", problem.get("title"))
     metadata.setdefault("difficulty", problem.get("difficulty"))
     metadata.setdefault("tags", problem.get("tags", []))

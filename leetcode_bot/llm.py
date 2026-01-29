@@ -1,18 +1,50 @@
 import json
-import hashlib
 import time
 from typing import Tuple
 import requests
 from .config import OLLAMA_URL, LCB_MODEL
 
 
+def _extract_response_text(raw: str) -> str:
+    text = (raw or "").strip()
+    if not text:
+        return ""
+    # If the response is a single JSON object with a "response" field (Ollama non-streaming)
+    try:
+        obj = json.loads(text)
+        if isinstance(obj, dict) and "response" in obj:
+            return obj.get("response") or ""
+    except Exception:
+        pass
+    # If the response is NDJSON streaming, stitch "response" chunks
+    parts = []
+    for line in text.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            obj = json.loads(line)
+            if isinstance(obj, dict) and "response" in obj:
+                parts.append(obj.get("response") or "")
+        except Exception:
+            continue
+    if parts:
+        return "".join(parts)
+    return text
+
+
 def _post_generate(prompt: str, model: str, timeout=60) -> Tuple[bool, str]:
     url = f"{OLLAMA_URL}/api/generate"
-    payload = {"model": model, "prompt": prompt, "max_tokens": 1500}
+    payload = {
+        "model": model,
+        "prompt": prompt,
+        "stream": False,
+        "options": {"num_predict": 1500},
+    }
     try:
         r = requests.post(url, json=payload, timeout=timeout)
         r.raise_for_status()
-        return True, r.text
+        return True, _extract_response_text(r.text)
     except Exception as e:
         return False, str(e)
 
@@ -29,7 +61,14 @@ def generate_json(prompt: str, model: str = None, retries=2):
             time.sleep(1)
             continue
         # try to locate JSON in response
-        text = resp.strip()
+        text = (resp or "").strip()
+        # Strip common code fences if present
+        if text.startswith("```"):
+            text = text.strip().strip("`")
+            # remove optional language tag line
+            lines = text.splitlines()
+            if lines and lines[0].lower().startswith("json"):
+                text = "\n".join(lines[1:]).strip()
         # directly try parse
         try:
             obj = json.loads(text)
