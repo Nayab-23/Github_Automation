@@ -38,13 +38,31 @@ def _post_generate(prompt: str, model: str, timeout: int, num_predict: int) -> T
     payload = {
         "model": model,
         "prompt": prompt,
-        "stream": False,
+        "stream": True,
         "options": {"num_predict": num_predict},
     }
+    req_timeout = None if timeout <= 0 else (10, timeout)
     try:
-        r = requests.post(url, json=payload, timeout=timeout)
+        r = requests.post(url, json=payload, stream=True, timeout=req_timeout)
         r.raise_for_status()
-        return True, _extract_response_text(r.text)
+        chunks = []
+        for line in r.iter_lines(decode_unicode=True):
+            if not line:
+                continue
+            try:
+                obj = json.loads(line)
+            except Exception:
+                continue
+            if isinstance(obj, dict) and obj.get("error"):
+                return False, obj.get("error")
+            if isinstance(obj, dict) and "response" in obj:
+                chunks.append(obj.get("response") or "")
+            if isinstance(obj, dict) and obj.get("done"):
+                break
+        text = "".join(chunks)
+        if not text:
+            text = _extract_response_text(r.text)
+        return True, text
     except Exception as e:
         return False, str(e)
 
