@@ -2,7 +2,7 @@ import json
 import time
 from typing import Tuple
 import requests
-from .config import OLLAMA_URL, LCB_MODEL
+from .config import OLLAMA_URL, LCB_MODEL, LCB_OLLAMA_TIMEOUT, LCB_NUM_PREDICT
 
 
 def _extract_response_text(raw: str) -> str:
@@ -33,13 +33,13 @@ def _extract_response_text(raw: str) -> str:
     return text
 
 
-def _post_generate(prompt: str, model: str, timeout=60) -> Tuple[bool, str]:
+def _post_generate(prompt: str, model: str, timeout: int, num_predict: int) -> Tuple[bool, str]:
     url = f"{OLLAMA_URL}/api/generate"
     payload = {
         "model": model,
         "prompt": prompt,
         "stream": False,
-        "options": {"num_predict": 1500},
+        "options": {"num_predict": num_predict},
     }
     try:
         r = requests.post(url, json=payload, timeout=timeout)
@@ -54,7 +54,7 @@ def generate_json(prompt: str, model: str = None, retries=2):
     attempt = 0
     last_err = None
     while attempt <= retries:
-        ok, resp = _post_generate(prompt, model)
+        ok, resp = _post_generate(prompt, model, timeout=LCB_OLLAMA_TIMEOUT, num_predict=LCB_NUM_PREDICT)
         if not ok:
             last_err = resp
             attempt += 1

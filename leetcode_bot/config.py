@@ -13,6 +13,8 @@ LCB_QUESTIONS_PATH = Path(os.getenv("LCB_QUESTIONS_PATH", str(ROOT / "data/quest
 LCB_RUN_MODE = os.getenv("LCB_RUN_MODE", "normal")
 LCB_BRANCH = os.getenv("LCB_BRANCH")
 LCB_DAYS_PER_WEEK = int(os.getenv("LCB_DAYS_PER_WEEK", "4"))
+LCB_OLLAMA_TIMEOUT = int(os.getenv("LCB_OLLAMA_TIMEOUT", "180"))
+LCB_NUM_PREDICT = int(os.getenv("LCB_NUM_PREDICT", "1200"))
 
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://127.0.0.1:11434")
 
