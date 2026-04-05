@@ -1,0 +1,1 @@
+* This solution uses a hash table to store the indices of numbers as we iterate through the list. 

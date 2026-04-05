@@ -1,0 +1,22 @@
+{
+  "date": "2026-04-05",
+  "run_at": "2026-04-05T10:15:16-07:00",
+  "iso_week": [
+    2026,
+    14
+  ],
+  "model": "qwen2.5-coder:1.5b-instruct",
+  "prompt_hash": "0201ab3219b9b036704b15bcd8352d94ce36eef8",
+  "retries": 0,
+  "validation_passed": true,
+  "selected_problem_id": "p_28d15ce118",
+  "selected_title": "Two Sum",
+  "difficulty": "Easy",
+  "tags": [
+    "array",
+    "hash-table"
+  ],
+  "slot_id": "2026-04-05-01",
+  "scheduled_for": "2026-04-05T10:11-07:00",
+  "run_mode": "normal"
+}
