@@ -33,11 +33,35 @@ def _extract_response_text(raw: str) -> str:
     return text
 
 
+def _parse_json_candidate(text: str):
+    text = (text or "").strip()
+    if not text:
+        return None
+    if text.startswith("```"):
+        text = text.strip().strip("`")
+        lines = text.splitlines()
+        if lines and lines[0].lower().startswith("json"):
+            text = "\n".join(lines[1:]).strip()
+    try:
+        return json.loads(text)
+    except Exception:
+        pass
+    start = text.find("{")
+    end = text.rfind("}")
+    if start != -1 and end != -1 and end > start:
+        try:
+            return json.loads(text[start : end + 1])
+        except Exception:
+            return None
+    return None
+
+
 def _post_generate(prompt: str, model: str, timeout: int, num_predict: int) -> Tuple[bool, str]:
     url = f"{OLLAMA_URL}/api/generate"
     payload = {
         "model": model,
         "prompt": prompt,
+        "format": "json",
         "stream": True,
         "options": {"num_predict": num_predict},
     }
@@ -57,6 +81,11 @@ def _post_generate(prompt: str, model: str, timeout: int, num_predict: int) -> T
                 return False, obj.get("error")
             if isinstance(obj, dict) and "response" in obj:
                 chunks.append(obj.get("response") or "")
+                if "}" in chunks[-1]:
+                    parsed = _parse_json_candidate("".join(chunks))
+                    if parsed is not None:
+                        r.close()
+                        return True, json.dumps(parsed)
             if isinstance(obj, dict) and obj.get("done"):
                 break
         text = "".join(chunks)
@@ -80,28 +109,10 @@ def generate_json(prompt: str, model: str = None, retries=2):
             continue
         # try to locate JSON in response
         text = (resp or "").strip()
-        # Strip common code fences if present
-        if text.startswith("```"):
-            text = text.strip().strip("`")
-            # remove optional language tag line
-            lines = text.splitlines()
-            if lines and lines[0].lower().startswith("json"):
-                text = "\n".join(lines[1:]).strip()
-        # directly try parse
-        try:
-            obj = json.loads(text)
+        obj = _parse_json_candidate(text)
+        if obj is not None:
             return obj, attempt
-        except Exception:
-            # try to extract first { ... }
-            start = text.find("{")
-            end = text.rfind("}")
-            if start != -1 and end != -1 and end > start:
-                sub = text[start:end+1]
-                try:
-                    obj = json.loads(sub)
-                    return obj, attempt
-                except Exception:
-                    last_err = text
+        last_err = text
         # repair prompt and retry
         repair = "\n\nIf you returned invalid JSON, please return valid JSON only exactly matching the schema."
         prompt = prompt + repair

@@ -28,8 +28,8 @@ Key settings:
 - `DRY_RUN=false`
 - `LCB_RUN_MODE=normal`
 - `LCB_DRY_RUN_USE_LLM=false`
-- `LCB_OLLAMA_TIMEOUT=180`
-- `LCB_NUM_PREDICT=256`
+- `LCB_OLLAMA_TIMEOUT=210`
+- `LCB_NUM_PREDICT=160`
 
 `LCB_NOW` is optional and useful only for local testing when you want to force the scheduler to evaluate a specific timestamp.
 

@@ -111,8 +111,8 @@ LCB_RECENT_PROBLEM_WINDOW = _get_int_alias(("RECENT_PROBLEM_WINDOW", "LCB_RECENT
 LCB_DRY_RUN_USE_LLM = _get_bool("LCB_DRY_RUN_USE_LLM", default=False)
 LCB_NOW = _get_first_env("LCB_NOW")
 
-LCB_OLLAMA_TIMEOUT = _get_int("LCB_OLLAMA_TIMEOUT", 180, minimum=30)
-LCB_NUM_PREDICT = _get_int("LCB_NUM_PREDICT", 256, minimum=100)
+LCB_OLLAMA_TIMEOUT = _get_int("LCB_OLLAMA_TIMEOUT", 210, minimum=30)
+LCB_NUM_PREDICT = _get_int("LCB_NUM_PREDICT", 160, minimum=64)
 
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://127.0.0.1:11434")
 

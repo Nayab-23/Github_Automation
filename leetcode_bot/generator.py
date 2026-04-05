@@ -5,10 +5,10 @@ from .llm import generate_json
 from .config import LCB_MODEL
 
 
-BASE_PROMPT_TEMPLATE = '''You are a helpful coding assistant. Produce output STRICTLY as a single JSON object with keys: "solution_py", "notes_md", "metadata".
-The "solution_py" value must be the full Python source file content and only Python code. Do not include markdown or fenced code blocks.
-The "notes_md" value must be concise markdown with 3 short bullet points covering approach, complexity, and one edge case. Keep notes_md under 120 words.
-The "metadata" value must be an object including title, difficulty, tags (list), and any assumptions.
+BASE_PROMPT_TEMPLATE = '''You are a helpful coding assistant. Produce output STRICTLY as a single JSON object with keys: "solution_py" and "notes_md".
+The "solution_py" value must be the full Python source file content and only Python code. Keep it short and do not include markdown or fenced code blocks.
+The "notes_md" value must be a single markdown string with exactly 2 short bullet points covering approach and complexity. Do not return a list. Keep notes_md under 60 words.
+Do not include extra keys.
 
 Problem:
 {prompt}
@@ -27,10 +27,20 @@ def build_prompt(problem: dict):
 def generate_solution(problem: dict, model: str = None):
     model = model or LCB_MODEL
     prompt = build_prompt(problem)
-    obj, attempts = generate_json(prompt, model=model, retries=1)
+    obj, attempts = generate_json(prompt, model=model, retries=0)
     # normalize
     solution = obj.get("solution_py")
     notes = obj.get("notes_md")
+    if isinstance(solution, list):
+        solution = "\n".join(str(part) for part in solution)
+    if isinstance(solution, str):
+        solution = solution.strip()
+        if solution.startswith('"""') and solution.endswith('"""'):
+            solution = solution[3:-3].strip()
+    if isinstance(notes, list):
+        notes = "\n".join(f"- {str(item).lstrip('- ').strip()}" for item in notes if str(item).strip())
+    elif notes is not None and not isinstance(notes, str):
+        notes = str(notes)
     metadata = obj.get("metadata") or {}
     metadata.setdefault("model", model)
     metadata.setdefault("title", problem.get("title"))
