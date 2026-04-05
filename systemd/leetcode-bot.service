@@ -1,14 +1,18 @@
 [Unit]
 Description=LeetCode Auto Practice Bot
-After=network.target
+Wants=network-online.target
+After=network-online.target
 
 [Service]
-Type=simple
-WorkingDirectory=%h/Github_Automation
-EnvironmentFile=-%h/Github_Automation/.env
-ExecStart=%h/Github_Automation/.venv/bin/python -m leetcode_bot.run
+Type=oneshot
+WorkingDirectory=/home/nayab/Github_Automation
+EnvironmentFile=-/home/nayab/Github_Automation/.env
+ExecStart=/home/nayab/Github_Automation/.venv/bin/python -m leetcode_bot.run
+Environment=PYTHONUNBUFFERED=1
 User=nayab
-Restart=on-failure
+Nice=10
+StandardOutput=journal
+StandardError=journal
 
 [Install]
 WantedBy=multi-user.target

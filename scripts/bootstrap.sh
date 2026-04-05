@@ -13,4 +13,4 @@ else
   echo "Ollama not reachable. Please start Ollama locally before pulling models."
 fi
 echo "Bootstrap complete. To run a dry-run:"
-echo "source $VEV/bin/activate && python -m leetcode_bot.run"
+echo "source $VEV/bin/activate && LCB_RUN_MODE=dry-run python -m leetcode_bot.run"

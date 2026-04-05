@@ -1,15 +1,21 @@
 import json
 from pathlib import Path
-from datetime import date
-from .config import ROOT
+from datetime import datetime
+
+from .config import DRY_RUN_PREVIEWS_DIR, ROOT
 
 
-def write_output(problem: dict, generated: dict, run_date: date):
-    y = run_date.year
-    mm = f"{run_date.month:02d}"
-    day = run_date.isoformat()
-    slug = problem.get("slug")
-    base = Path(ROOT) / "leetcode" / str(y) / mm / f"{day}_{slug}"
+def write_output(problem: dict, generated: dict, run_at: datetime, slot: dict = None, dry_run: bool = False):
+    y = run_at.year
+    mm = f"{run_at.month:02d}"
+    day = run_at.date().isoformat()
+    run_stamp = run_at.strftime("%Y-%m-%d_%H%M")
+    slug = problem.get("slug") or "problem"
+    if dry_run:
+        base_root = DRY_RUN_PREVIEWS_DIR / day
+    else:
+        base_root = Path(ROOT) / "leetcode" / str(y) / mm
+    base = base_root / f"{run_stamp}_{slug}"
     base.mkdir(parents=True, exist_ok=True)
     sol_path = base / "solution.py"
     notes_path = base / "notes.md"
@@ -19,7 +25,8 @@ def write_output(problem: dict, generated: dict, run_date: date):
     notes_path.write_text(generated.get("notes_md") or "")
     metadata = {
         "date": day,
-        "iso_week": run_date.isocalendar()[0:2],
+        "run_at": run_at.isoformat(timespec="seconds"),
+        "iso_week": run_at.isocalendar()[0:2],
         "model": generated.get("metadata", {}).get("model", None),
         "prompt_hash": generated.get("prompt_hash"),
         "retries": generated.get("attempts", 0),
@@ -28,6 +35,9 @@ def write_output(problem: dict, generated: dict, run_date: date):
         "selected_title": problem.get("title"),
         "difficulty": problem.get("difficulty"),
         "tags": problem.get("tags"),
+        "slot_id": slot.get("id") if slot else None,
+        "scheduled_for": slot.get("scheduled_for") if slot else None,
+        "run_mode": "dry-run" if dry_run else "normal",
     }
     meta_path.write_text(json.dumps(metadata, indent=2))
     return base

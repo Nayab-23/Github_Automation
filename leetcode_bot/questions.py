@@ -1,9 +1,12 @@
 import re
 import json
 import hashlib
+import random
+from datetime import datetime
 from pathlib import Path
 from typing import List
-from .config import LCB_QUESTIONS_PATH, STATE_DIR
+
+from .config import LCB_QUESTIONS_PATH, LCB_RECENT_PROBLEM_WINDOW, PROBLEM_HISTORY_PATH
 
 
 def _slugify(text: str, max_len=50):
@@ -56,23 +59,49 @@ def parse_questions() -> List[dict]:
     return problems
 
 
-def pick_problem():
+def _load_problem_history() -> List[dict]:
+    if not PROBLEM_HISTORY_PATH.exists():
+        return []
+    try:
+        data = json.loads(PROBLEM_HISTORY_PATH.read_text())
+    except Exception:
+        return []
+    if isinstance(data, list):
+        return data
+    return []
+
+
+def _save_problem_history(history: List[dict]):
+    PROBLEM_HISTORY_PATH.write_text(json.dumps(history[-500:], indent=2))
+
+
+def pick_problem(record_usage: bool = True):
     problems = parse_questions()
     if not problems:
         return None
-    used_path = STATE_DIR / "used_problems.json"
-    used = set()
-    if used_path.exists():
-        try:
-            used = set(json.loads(used_path.read_text()))
-        except Exception:
-            used = set()
-    # prefer unused
-    unused = [p for p in problems if p["id"] not in used]
-    if unused:
-        chosen = unused[0]
-    else:
-        chosen = problems[0]
-    used.add(chosen["id"])
-    used_path.write_text(json.dumps(list(used), indent=2))
+
+    history = _load_problem_history()
+    used_ids = {entry.get("id") for entry in history}
+    recent_ids = [
+        entry.get("id")
+        for entry in history[-LCB_RECENT_PROBLEM_WINDOW:]
+        if entry.get("id")
+    ]
+
+    candidates = [problem for problem in problems if problem["id"] not in used_ids]
+    if not candidates:
+        candidates = [problem for problem in problems if problem["id"] not in recent_ids]
+    if not candidates:
+        candidates = problems
+
+    chosen = random.choice(candidates)
+    if record_usage:
+        history.append(
+            {
+                "id": chosen["id"],
+                "title": chosen.get("title"),
+                "selected_at": datetime.now().astimezone().isoformat(timespec="seconds"),
+            }
+        )
+        _save_problem_history(history)
     return chosen

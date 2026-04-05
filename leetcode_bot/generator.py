@@ -27,7 +27,7 @@ def build_prompt(problem: dict):
 def generate_solution(problem: dict, model: str = None):
     model = model or LCB_MODEL
     prompt = build_prompt(problem)
-    obj, attempts = generate_json(prompt, model=model, retries=2)
+    obj, attempts = generate_json(prompt, model=model, retries=1)
     # normalize
     solution = obj.get("solution_py")
     notes = obj.get("notes_md")
