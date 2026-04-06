@@ -96,7 +96,7 @@ LCB_BRANCH = os.getenv("LCB_BRANCH") or None
 LCB_COMMITS_PER_DAY_MIN = _get_int_alias(("MIN_COMMITS_PER_DAY", "LCB_COMMITS_PER_DAY_MIN"), 3, minimum=1)
 LCB_COMMITS_PER_DAY_MAX = _get_int_alias(
     ("MAX_COMMITS_PER_DAY", "LCB_COMMITS_PER_DAY_MAX"),
-    6,
+    8,
     minimum=LCB_COMMITS_PER_DAY_MIN,
 )
 LCB_ACTIVE_START_MINUTES = _parse_clock(_get_first_env("ACTIVE_HOURS_START", "LCB_ACTIVE_START_HOUR"), default_hour=9)

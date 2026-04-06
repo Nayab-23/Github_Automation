@@ -4,7 +4,7 @@ This project runs on a Raspberry Pi and generates multiple LeetCode-style commit
 
 ## Behavior
 
-- Default schedule: 3 to 6 commits per day.
+- Default schedule: 3 to 8 commits per day.
 - Active window: random slots between 09:00 and 22:00 local time.
 - Minimum spacing: 45 minutes between scheduled runs.
 - Persistent state: daily schedules are stored in `.state/schedules/YYYY-MM-DD.json`.
@@ -19,7 +19,7 @@ Copy `.env.example` to `.env` and preserve your existing secrets, repo settings,
 Key settings:
 
 - `MIN_COMMITS_PER_DAY=3`
-- `MAX_COMMITS_PER_DAY=6`
+- `MAX_COMMITS_PER_DAY=8`
 - `ACTIVE_HOURS_START=09:00`
 - `ACTIVE_HOURS_END=22:00`
 - `MIN_GAP_MINUTES=45`
