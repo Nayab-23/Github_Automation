@@ -1,0 +1,21 @@
+{
+  "date": "2026-04-05",
+  "run_at": "2026-04-05T17:10:16-07:00",
+  "iso_week": [
+    2026,
+    14
+  ],
+  "model": "qwen2.5-coder:1.5b-instruct",
+  "prompt_hash": "11141bb73e058c2451b5ff2033171a6427e5ca83",
+  "retries": 0,
+  "validation_passed": true,
+  "selected_problem_id": "p_3f0188ce18",
+  "selected_title": "Reverse Linked List",
+  "difficulty": "Easy",
+  "tags": [
+    "linked-list"
+  ],
+  "slot_id": "2026-04-05-04",
+  "scheduled_for": "2026-04-05T17:09-07:00",
+  "run_mode": "normal"
+}

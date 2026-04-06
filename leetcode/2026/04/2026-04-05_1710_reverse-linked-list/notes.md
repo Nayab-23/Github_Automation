@@ -1,0 +1,2 @@
+* **Approach**: Traverse the linked list while keeping track of the previous node and updating the `next` pointer to point to the previous node. This is done iteratively, ensuring all nodes are correctly reversed.
+* **Complexity**: Time complexity is O(n), where n is the number of nodes in the linked list. Space complexity is O(1), as only a constant amount of extra space is used.
