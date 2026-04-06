@@ -55,20 +55,19 @@ The service remains `systemd`-based. The timer now polls every 5 minutes; the Py
 ## Notes
 
 - Solutions are LLM-assisted and only syntax-checked locally.
+- On Raspberry Pi, the model now only has to return `solution.py`; concise notes are generated locally to reduce malformed JSON failures.
 - If Ollama is unreachable, normal runs will fail fast and the slot will be recorded as failed.
 - Generated solution folders now include the run time so multiple commits on the same day do not collide.
 
 <!-- LCB:INDEX:START -->
 ## Generated Activity Snapshot
 
-Last updated: 2026-04-06T00:13:36Z
+Last updated: not generated yet
 
-Total solutions: 2
+Total solutions: 0
 
 ### By Difficulty
-- Easy: 2
 
 ### Latest
-- 2026-04-05: [Reverse Linked List](leetcode/2026/04/2026-04-05_1710_reverse-linked-list)
-- 2026-04-05: [Two Sum](leetcode/2026/04/2026-04-05_1015_two-sum)
+- No generated solutions yet.
 <!-- LCB:INDEX:END -->
