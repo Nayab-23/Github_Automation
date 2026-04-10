@@ -1,0 +1,2 @@
+- Problem: Reverse Linked List (Easy).
+- Tags: linked-list. Solution was generated locally and syntax-checked.
