@@ -1,0 +1,2 @@
+- Problem: Two Sum (Easy).
+- Tags: array, hash-table. Solution was generated locally and syntax-checked.
