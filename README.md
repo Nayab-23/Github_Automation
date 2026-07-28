@@ -62,14 +62,15 @@ The service remains `systemd`-based. The timer now polls every 5 minutes; the Py
 <!-- LCB:INDEX:START -->
 ## Generated Activity Snapshot
 
-Last updated: 2026-07-28T19:52:28Z
+Last updated: 2026-07-28T20:58:47Z
 
-Total solutions: 359
+Total solutions: 360
 
 ### By Difficulty
-- Easy: 359
+- Easy: 360
 
 ### Latest
+- 2026-07-28: [Reverse Linked List](leetcode/2026/07/2026-07-28_1355_reverse-linked-list)
 - 2026-07-28: [Two Sum](leetcode/2026/07/2026-07-28_1250_two-sum)
 - 2026-07-28: [Two Sum](leetcode/2026/07/2026-07-28_1110_two-sum)
 - 2026-07-28: [Reverse Linked List](leetcode/2026/07/2026-07-28_0905_reverse-linked-list)
@@ -79,5 +80,4 @@ Total solutions: 359
 - 2026-07-27: [Reverse Linked List](leetcode/2026/07/2026-07-27_1605_reverse-linked-list)
 - 2026-07-27: [Reverse Linked List](leetcode/2026/07/2026-07-27_0950_reverse-linked-list)
 - 2026-07-26: [Two Sum](leetcode/2026/07/2026-07-26_2030_two-sum)
-- 2026-07-26: [Reverse Linked List](leetcode/2026/07/2026-07-26_1740_reverse-linked-list)
 <!-- LCB:INDEX:END -->
